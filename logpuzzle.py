@@ -77,7 +77,7 @@ def download_images(img_urls, dest_dir):
 
         <title>Image Revealed!</title>
     </head>
-
+    
     <body>
     <h1>IMAGE REVEALED!</h1>
         <div class="Container">
@@ -89,6 +89,7 @@ def download_images(img_urls, dest_dir):
 """)
         for image in image_name_list:
             f.write(f'<img src="{image}" />')
+
         f.write("""
             </div>
     </body>
