@@ -31,7 +31,8 @@ https://www.codespeedy.com/re-dotall-in-python/
 https://guide.freecodecamp.org/python/
                             is-there-a-way-to-substring-a-string-in-python/
 https://stackoverflow.com/questions/36139/how-to-sort-a-list-of-strings
-Help from Jake H."""
+https://stackoverflow.com/questions/4134019/a-good-html-skeleton
+Help from Jake H. and Ybrayym A."""
 
 
 def read_urls(filename):
@@ -77,7 +78,7 @@ def download_images(img_urls, dest_dir):
 
         <title>Image Revealed!</title>
     </head>
-    
+
     <body>
     <h1>IMAGE REVEALED!</h1>
         <div class="Container">
