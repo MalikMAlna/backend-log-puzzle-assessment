@@ -43,9 +43,9 @@ def read_urls(filename):
     print(f'Reading file: {filename}')
     pattern = r"\S+puzzle\S+"
     with open(filename, 'r') as f:
-        paths = f.read()
+        file_paths = f.read()
     full_urls = []
-    paths_list = list(set(re.findall(pattern, paths, re.DOTALL)))
+    paths_list = list(set(re.findall(pattern, file_paths, re.DOTALL)))
     for path in paths_list:
         full_urls.append("https://code.google.com" + path)
     full_urls = sorted(full_urls, key=lambda url: url[-8:].lower())
@@ -71,20 +71,13 @@ def download_images(img_urls, dest_dir):
         image.urlretrieve(url, "img" + str(idx) + ".jpg")
         image_name_list.append("img" + str(idx) + ".jpg")
     with open("index.html", "w") as f:
-        f.write(f"""<html>
+        f.write("""<html>
     <head>
-        <rel="stylesheet" type="text/css" href="css/main.css" />
-        <meta http-equiv="content-type" content="text/php; charset=utf-8" />
-
         <title>Image Revealed!</title>
     </head>
 
     <body>
     <h1>IMAGE REVEALED!</h1>
-        <div class="Container">
-            <div class="Header">
-
-            </div>
 
             <div class="Main">
 """)
