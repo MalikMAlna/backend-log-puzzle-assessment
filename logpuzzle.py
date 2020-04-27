@@ -24,6 +24,7 @@ import sys
 import urllib.request
 import argparse
 import threading
+from time import sleep
 
 __author__ = """https://stackoverflow.com/questions/7724993/
                 python-using-regex-to-find-multiple-matches-and-print-them-out
@@ -70,8 +71,8 @@ def download_image(img_url, dest_dir):
     #     os.chdir(dest_dir)
     # os.chdir(dest_dir)
     print(img_url)
-    image.urlretrieve(img_url, "img-" + img_name[2:6] + ".jpg")
-    image_name_list.append("img-" + img_name[2:6] + ".jpg")
+    image.urlretrieve(img_url, "img-" + img_name[-8:-4] + ".jpg")
+    image_name_list.append("img-" + img_name[-8:-4] + ".jpg")
     if not os.path.isfile("index.html"):
         with open("index.html", "w") as f:
             f.write("""<html>
@@ -83,14 +84,12 @@ def download_image(img_url, dest_dir):
 
 
     </body>
-
     <footer>
         <div class="Footer">
             <b>Copyright - 2020</b>
         </div>
     </footer>
-</html>
-                """)
+</html>""")
     else:
         with open('index.html', 'r') as f:
             data = f.readlines()
@@ -129,6 +128,7 @@ def main(args):
             t = threading.Thread(target=download_image, args=[
                 img_url, parsed_args.todir])
             t.start()
+            sleep(.05)
             threads.append(t)
         for thread in threads:
             thread.join()
