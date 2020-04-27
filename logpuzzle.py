@@ -62,6 +62,7 @@ def download_image(img_url, dest_dir):
     Creates the directory if necessary.
     """
     img_name = img_url.split('/')[8]
+    image_name_list = []
     print(f'Downloading {img_name} in {dest_dir}...')
     image = urllib.request
     # if not os.path.exists(dest_dir):
@@ -70,6 +71,7 @@ def download_image(img_url, dest_dir):
     # os.chdir(dest_dir)
     print(img_url)
     image.urlretrieve(img_url, "img-" + img_name[2:6] + ".jpg")
+    image_name_list.append(f"img-{img_name[2:6]}.jpg")
     if not os.path.isfile("index.html"):
         with open("index.html", "w") as f:
             f.write("""<html>
@@ -78,9 +80,8 @@ def download_image(img_url, dest_dir):
     </head>
     <body>
     <h1>IMAGE REVEALED!</h1>
-            <div class="Main">
 
-            </div>
+
     </body>
 
     <footer>
@@ -93,7 +94,8 @@ def download_image(img_url, dest_dir):
     else:
         with open('index.html', 'r') as f:
             data = f.readlines()
-            data[7] += f' <img src="{image}" />'
+            for image in image_name_list:
+                data[6] += f'<img src="{image}" />,'
         with open('index.html', 'w') as f:
             f.writelines(data)
 
@@ -130,6 +132,13 @@ def main(args):
             threads.append(t)
         for thread in threads:
             thread.join()
+        with open('index.html', 'r') as f:
+            data = f.readlines()
+            img_data = data[7].split(",")
+            img_data.sort(key=lambda chars: chars[-11:-8].lower())
+            data[7] = "".join(img_data)
+        with open('index.html', 'w') as f:
+            f.writelines(data)
     else:
         print('\n'.join(img_urls))
 
