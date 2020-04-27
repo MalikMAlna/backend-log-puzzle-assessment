@@ -71,7 +71,7 @@ def download_image(img_url, dest_dir):
     # os.chdir(dest_dir)
     print(img_url)
     image.urlretrieve(img_url, "img-" + img_name[2:6] + ".jpg")
-    image_name_list.append(f"img-{img_name[2:6]}.jpg")
+    image_name_list.append("img-" + img_name[2:6] + ".jpg")
     if not os.path.isfile("index.html"):
         with open("index.html", "w") as f:
             f.write("""<html>
