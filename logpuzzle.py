@@ -23,6 +23,7 @@ import re
 import sys
 import urllib.request
 import argparse
+import threading
 
 __author__ = """https://stackoverflow.com/questions/7724993/
                 python-using-regex-to-find-multiple-matches-and-print-them-out
@@ -52,7 +53,7 @@ def read_urls(filename):
     return full_urls
 
 
-def download_images(img_urls, dest_dir):
+def download_image(img_url, dest_dir):
     """Given the urls already in the correct order, downloads
     each image into the given directory.
     Gives the images local filenames img0, img1, and so on.
@@ -60,31 +61,25 @@ def download_images(img_urls, dest_dir):
     with an img tag to show each local image file.
     Creates the directory if necessary.
     """
-    print(f'Downloading files in {dest_dir}...')
+    img_name = img_url.split('/')[8]
+    print(f'Downloading {img_name} in {dest_dir}...')
     image = urllib.request
-    image_name_list = []
-    if not os.path.exists(dest_dir):
-        os.makedirs(dest_dir)
-        os.chdir(dest_dir)
-    for idx, url in enumerate(img_urls):
-        print(url)
-        image.urlretrieve(url, "img" + str(idx) + ".jpg")
-        image_name_list.append("img" + str(idx) + ".jpg")
-    with open("index.html", "w") as f:
-        f.write("""<html>
+    # if not os.path.exists(dest_dir):
+    #     os.makedirs(dest_dir)
+    #     os.chdir(dest_dir)
+    # os.chdir(dest_dir)
+    print(img_url)
+    image.urlretrieve(img_url, "img-" + img_name[2:6] + ".jpg")
+    if not os.path.isfile("index.html"):
+        with open("index.html", "w") as f:
+            f.write("""<html>
     <head>
         <title>Image Revealed!</title>
     </head>
-
     <body>
     <h1>IMAGE REVEALED!</h1>
-
             <div class="Main">
-""")
-        for image in image_name_list:
-            f.write(f'<img src="{image}" />')
 
-        f.write("""
             </div>
     </body>
 
@@ -95,6 +90,12 @@ def download_images(img_urls, dest_dir):
     </footer>
 </html>
                 """)
+    else:
+        with open('index.html', 'r') as f:
+            data = f.readlines()
+            data[7] += f' <img src="{image}" />'
+        with open('index.html', 'w') as f:
+            f.writelines(data)
 
 
 def create_parser():
@@ -102,7 +103,8 @@ def create_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-d', '--todir',  help='destination directory for downloaded images')
-    parser.add_argument('logfile', help='apache logfile to extract urls from')
+    parser.add_argument(
+        'logfile', help='apache logfile to extract urls from')
 
     return parser
 
@@ -120,7 +122,14 @@ def main(args):
     img_urls = read_urls(parsed_args.logfile)
 
     if parsed_args.todir:
-        download_images(img_urls, parsed_args.todir)
+        threads = []
+        for img_url in img_urls:
+            t = threading.Thread(target=download_image, args=[
+                img_url, parsed_args.todir])
+            t.start()
+            threads.append(t)
+        for thread in threads:
+            thread.join()
     else:
         print('\n'.join(img_urls))
 
