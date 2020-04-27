@@ -66,10 +66,9 @@ def download_image(img_url, dest_dir):
     image_name_list = []
     print(f'Downloading {img_name} in {dest_dir}...')
     image = urllib.request
-    # if not os.path.exists(dest_dir):
-    #     os.makedirs(dest_dir)
-    #     os.chdir(dest_dir)
-    # os.chdir(dest_dir)
+    if not os.path.exists(dest_dir):
+        os.makedirs(dest_dir)
+        os.chdir(dest_dir)
     print(img_url)
     image.urlretrieve(img_url, "img-" + img_name[-8:-4] + ".jpg")
     image_name_list.append("img-" + img_name[-8:-4] + ".jpg")
