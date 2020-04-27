@@ -54,21 +54,25 @@ def read_urls(filename):
     return full_urls
 
 
-def download_image(img_url, dest_dir):
-    """Given the urls already in the correct order, downloads
-    each image into the given directory.
-    Gives the images local filenames img0, img1, and so on.
-    Creates an index.html in the directory
-    with an img tag to show each local image file.
-    Creates the directory if necessary.
-    """
-    img_name = img_url.split('/')[8]
-    image_name_list = []
-    print(f'Downloading {img_name} in {dest_dir}...')
-    image = urllib.request
+def create_dest_dir(dest_dir):
     if not os.path.exists(dest_dir):
         os.makedirs(dest_dir)
         os.chdir(dest_dir)
+    return dest_dir
+
+
+def download_image(img_url, dest_dir):
+    """
+    Downloads an image into the given directory.
+    Creates the directory if necessary.
+    Gives the images local filenames img-baaa, img-baab, and so on.
+    Creates an index.html in the directory
+    with an img tag to show each local image file.
+    """
+    img_name = img_url.split('/')[8]
+    image_name_list = []
+    image = urllib.request
+    print(f'Downloading {img_name} in {dest_dir}...')
     print(img_url)
     image.urlretrieve(img_url, "img-" + img_name[-8:-4] + ".jpg")
     image_name_list.append("img-" + img_name[-8:-4] + ".jpg")
@@ -121,11 +125,13 @@ def main(args):
 
     img_urls = read_urls(parsed_args.logfile)
 
+    dest_dir = create_dest_dir(parsed_args.todir)
+
     if parsed_args.todir:
         threads = []
         for img_url in img_urls:
             t = threading.Thread(target=download_image, args=[
-                img_url, parsed_args.todir])
+                img_url, dest_dir])
             t.start()
             sleep(.05)
             threads.append(t)
