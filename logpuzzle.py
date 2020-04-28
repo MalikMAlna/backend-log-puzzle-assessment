@@ -55,6 +55,7 @@ def read_urls(filename):
 
 
 def create_dest_dir(dest_dir):
+    """Creates the destination directory if necessary."""
     if not os.path.exists(dest_dir):
         os.makedirs(dest_dir)
         os.chdir(dest_dir)
@@ -64,7 +65,6 @@ def create_dest_dir(dest_dir):
 def download_image(img_url, dest_dir):
     """
     Downloads an image into the given directory.
-    Creates the directory if necessary.
     Gives the images local filenames img-baaa, img-baab, and so on.
     Creates an index.html in the directory
     with an img tag to show each local image file.
@@ -133,7 +133,7 @@ def main(args):
             t = threading.Thread(target=download_image, args=[
                 img_url, dest_dir])
             t.start()
-            sleep(.05)
+            sleep(.046)
             threads.append(t)
         for thread in threads:
             thread.join()
