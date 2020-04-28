@@ -109,7 +109,6 @@ def create_parser():
         '-d', '--todir',  help='destination directory for downloaded images')
     parser.add_argument(
         'logfile', help='apache logfile to extract urls from')
-
     return parser
 
 
@@ -133,7 +132,7 @@ def main(args):
             t = threading.Thread(target=download_image, args=[
                 img_url, dest_dir])
             t.start()
-            sleep(.046)
+            sleep(.0535)
             threads.append(t)
         for thread in threads:
             thread.join()
